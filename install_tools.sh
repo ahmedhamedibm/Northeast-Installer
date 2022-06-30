@@ -448,7 +448,7 @@ install_terraform_for_mac(){
 
 install_daffy(){
 
-
+   wget http://get.daffy-installer.com/download-scripts/daffy-init.sh; chmod 777 daffy-init.sh;./daffy-init.sh 
     
 }
 
@@ -557,4 +557,7 @@ elif [[ ${TERRAFORM_CLI} == true ]]; then
     install_terraform_for_mac
 fi 
 
-echo "this works3" >> ~/.bashrc
+# DAFFY CLI
+if [[ ${DAFFY} == true ]]; then
+   install_daffy
+fi   
