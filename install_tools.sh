@@ -15,14 +15,14 @@ install_deps_with_apt() {
     apt-get update -y 
     apt-get install -y apt-utils
     apt-get -y upgrade 
-    apt-get install -y software-properties-common apt-transport-https wget curl 
+    apt-get install -y software-properties-common apt-transport-https wget curl unzip
 
 }
 
 install_deps_with_yum() {
 
     yum update -y
-    yum install -y wget epel-release -y curl 
+    yum install -y wget epel-release -y curl unzip
 
 }
 
@@ -454,7 +454,7 @@ install_daffy(){
 
 server_info
 source tools-env.sh
-echo "this works" >> ~/.bashrc
+
 
 # DEPENDENCIES 
 
