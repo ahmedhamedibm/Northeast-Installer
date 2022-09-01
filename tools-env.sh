@@ -1,12 +1,12 @@
-export IBMCLOUD_CLI=true
+export IBMCLOUD_CLI=false
 export AWS_CLI=false
 export GCLOUD_CLI=false
 export AZURE_CLI=false
-export OC_CLI=true
+export OC_CLI=false
 export TKN_CLI=false
 export ARGO_CD_CLI=false
-export GITHUB_CLI=true
-export DEPS=true
+export GITHUB_CLI=false
+export DEPS=false
 export ISTIO_CLI=false
 export TERRAFORM_CLI=false
-export DAFFY=true
+export DAFFY=false

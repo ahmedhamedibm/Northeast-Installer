@@ -479,7 +479,7 @@ elif [[ "$DISTRO" == *Ubuntu* || "$DISTRO" == *Debian* || "$DISTRO" == *RED*HAT*
     install_gcloud_for_arm
 elif [[ ${ARCHITECTURE} == x86_64 ]] && [[ ${GCLOUD_CLI} == true ]]; then
     install_gcloud_for_mac_x86
-else
+elif [[ ${GCLOUD_CLI} == true ]]; then
     install_gcloud_for_mac_m1
 fi
 
