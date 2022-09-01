@@ -166,7 +166,6 @@ install_aws_for_mac(){
     if [[ -a /usr/local/bin/aws/aws ]]; then
         chmod +x /usr/local/bin/aws/aws
         echo "alias aws='/usr/local/bin/aws/aws'" >> ~/.zshrc
-        source ~/.zshrc
     else
         echo "/usr/local/bin/aws/aws not found"
     fi
@@ -181,7 +180,6 @@ install_aws_for_x86() {
     if [[ -a /usr/local/bin/aws/aws ]]; then
         chmod +x /usr/local/bin/aws/aws
         echo "alias aws='/usr/local/bin/aws/aws'" >> ~/.bashrc
-        source ~/.bashrc
     else
         echo "/usr/local/bin/aws/aws not found"
     fi
@@ -196,7 +194,6 @@ install_aws_for_arm() {
     if [[ -a /usr/local/bin/aws/aws ]]; then
         chmod +x /usr/local/bin/aws/aws
         echo "alias aws='/usr/local/bin/aws/aws'" >> ~/.bashrc
-        source ~/.bashrc
     else
         echo "/usr/local/bin/aws/aws not found"
     fi
@@ -214,7 +211,6 @@ mv $(which gh) /usr/local/bin/gh
 if [[ -a /usr/local/bin/gh ]]; then
     chmod +x /usr/local/bin/gh
     echo "alias gh='/usr/local/bin/gh'" >> ~/.bashrc
-    source ~/.bashrc
 else
     echo "/usr/local/bin/gh not found"
 fi
