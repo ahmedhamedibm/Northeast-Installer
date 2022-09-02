@@ -364,79 +364,79 @@ install_daffy(){
 args=$@
 
 case "${args[@]}" in 
-  *"--installDEP"*)
+  *"--installDep"*|*"--installdep"*|*"--installDEP"*|*"installDEP"*|*"installdep"*)
     install_deps
   ;;
 esac
 
 case "${args[@]}" in 
-  *"--installIBMC"*)
+  *"--installIbmc"*|*"--installibmc"*|*"--installIBMC"*|*"installIbmc"*|*"installibmc"*|*"installIBMC"*)
     install_ibmc
   ;;
 esac
 
 case "${args[@]}" in 
-  *"--installAWS"*)
+  *"--installAws"*|*"--installaws"*|*"--installAWS"*|*"installAws"*|*"installaws"*|*"installAWS"*)
     install_aws
   ;;
 esac
 
 case "${args[@]}" in 
-  *"--installAZ"*)
+  *"--installAz"*|*"--installaz"*|*"--installAWS"*|*"installAz"*|*"installaz"*|*"installAZ"*)
     install_azure
   ;;
 esac
 
 case "${args[@]}" in 
-  *"--installGCLOUD"*)
+  *"--installGcloud"*|*"--installgcloud"*|*"--installGCLOUD"*|*"installGcloud"*|*"installgcloud"*|*"installGCLOUD"*)
     install_gcloud
   ;;
 esac
 
 case "${args[@]}" in 
-  *"--installGH"*)
+  *"--installGh"*|*"--installgh"*|*"--installGH"*|*"installGh"*|*"installgh"*|*"installGH"*)
     install_gh
   ;;
 esac
 
 case "${args[@]}" in 
-  *"--installTKN"*)
+  *"--installTkn"*|*"--installtkn"*|*"--installTKN"*|*"installTkn"*|*"installtkn"*|*"installTKN"*)
     install_tkn
   ;;
 esac
 
 case "${args[@]}" in 
-  *"--installOC"*)
+  *"--installOc"*|*"--installoc"*|*"--installOC"*|*"installOc"*|*"installoc"*|*"installOC"*)
     install_oc
   ;;
 esac
 
 case "${args[@]}" in 
-  *"--installARGOCD"*)
+  *"--installArgocd"*|*"--installargocd"*|*"--installARGOCD"*|*"installArgocd"*|*"installargocd"*|*"installARGOCD"*)
     install_argo
   ;;
 esac
 
 case "${args[@]}" in 
-  *"--installISTIO"*)
+  *"--installIstio"*|*"--installistio"*|*"--installISTIO"*|*"installIstio"*|*"installistio"*|*"installISTIO"*)
     install_istio
   ;;
 esac
 
 case "${args[@]}" in 
-  *"--installTerraform"*)
+  *"--installTerraform"*|*"--installterraform"*|*"--installTERRAFORM"*|*"installTerraform"*|*"installterraform"*|*"installTERRAFORM"*)
     install_terraform
   ;;
 esac
 
 case "${args[@]}" in 
-  *"--installDaffy"*)
+  *"--installDaffy"*|*"--installdaffy"*|*"--installDAFFY"*|*"installDaffy"*|*"installdaffy"*|*"installDAFFY"*)
     install_daffy
   ;;
 esac
 
 case "${args[@]}" in 
-  *"--all"*)
+  *"--all"*|*"-a"*|*"-A"*|*"all"*)
     install_deps
     install_aws
     install_azure
