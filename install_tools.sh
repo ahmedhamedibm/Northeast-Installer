@@ -91,14 +91,6 @@ install_gcloud(){
 install_azure(){
     if [[ "$DISTRO" == *Ubuntu* || "$DISTRO" == *Debian*  ]]; then
         curl -sL https://aka.ms/InstallAzureCLIDeb | bash
-        mv $(which az) /usr/local/bin/az
-
-        if [[ -a /usr/local/bin/az ]]; then
-            chmod +x /usr/local/bin/az
-            echo "alias az='/usr/local/bin/az'" >> ~/.bashrc
-        else
-            echo "/usr/local/bin/az not found"
-        fi
     elif [[ "$DISTRO" == *RED*HAT* || "$DISTRO" == *RHEL* || "$DISTRO" == *Red*Hat*Enterprise*Linux* || "$DISTRO" == *CentOS* || "$DISTRO" == Fedora ]]; then
         rpm --import https://packages.microsoft.com/keys/microsoft.asc
         dnf install -y https://packages.microsoft.com/config/rhel/8/packages-microsoft-prod.rpm
@@ -109,13 +101,13 @@ install_azure(){
         gpgcheck=1
         gpgkey=https://packages.microsoft.com/keys/microsoft.asc" | tee /etc/yum.repos.d/azure-cli.repo
         dnf install -y azure-cli
-        mv $(which az) /usr/local/bin/az
-        if [[ -a /usr/local/bin/az ]]; then
-            chmod +x /usr/local/bin/az
-            echo "alias az='/usr/local/bin/az'" >> ~/.bashrc
-        else
-            echo "/usr/local/bin/az not found"
-        fi
+        # mv $(which az) /usr/local/bin/az
+        # if [[ -a /usr/local/bin/az ]]; then
+        #     chmod +x /usr/local/bin/az
+        #     echo "alias az='/usr/local/bin/az'" >> ~/.bashrc
+        # else
+        #     echo "/usr/local/bin/az not found"
+        # fi
     else
         brew update && brew install azure-cli
     fi 
