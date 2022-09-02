@@ -428,7 +428,7 @@ case "${args[@]}" in
 esac
 
 case "${args[@]}" in 
-  *"--all"*|*"-a"*|*"-A"*|*"all"*)
+  *"--all"*|*"-a"*|*"-A"*)
     install_deps
     install_aws
     install_azure
