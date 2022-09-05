@@ -1,0 +1,357 @@
+#! /bin/bash
+
+#SERVER FUNCTION
+server_info(){
+
+    export DISTRO=$(lsb_release -ds 2>/dev/null || cat /etc/*release 2>/dev/null | head -n1 || uname -om || echo "")
+    export ARCHITECTURE=$(uname -m)
+    export BITS=$(getconf LONG_BIT)
+    
+    }
+
+server_info
+
+# DEPENDENCIES 
+install_deps(){
+    
+    if [[ "$DISTRO" == *Ubuntu* || "$DISTRO" == *Debian* ]]; then
+        apt-get update -y || sudo apt-get update -y
+        apt-get install -y apt-utils || sudo apt-get install -y apt-utils
+        apt-get -y upgrade || sudo apt-get -y upgrade
+        apt-get install -y snap software-properties-common apt-transport-https wget curl unzip vim iproute2 git || sudo apt-get install -y snap software-properties-common apt-transport-https wget curl unzip vim iproute2 git
+    elif [[ "$DISTRO" == *RED*HAT* || "$DISTRO" == *RHEL* || "$DISTRO" == *CentOS* || "$DISTRO" == Fedora  || "$DISTRO" == *Red*Hat*Enterprise*Linux* ]]; then
+        yum update -y || sudo yum update -y
+        yum install -y wget curl unzip python36 vim git || sudo yum install -y wget curl unzip python36 vim
+    else 
+        if [[ -z "$(which brew)" && -n "$(which ruby)" ]]; then   
+            ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+        else
+            /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        fi
+    fi
+}
+
+# IBM CLOUD CLI FUNCTION
+install_ibmc() {
+
+    curl -sL https://raw.githubusercontent.com/IBM-Cloud/ibm-cloud-developer-tools/master/linux-installer/idt-installer | bash 
+
+}
+
+# GOOGLE CLOUD CLI
+install_gcloud(){
+    if [[ "$DISTRO" == *Ubuntu* || "$DISTRO" == *Debian* || "$DISTRO" == *RED*HAT* || "$DISTRO" == *RHEL* || "$DISTRO" == *CentOS* || "$DISTRO" == Fedora  || "$DISTRO" == *Red*Hat*Enterprise*Linux* ]] && [[ ${ARCHITECTURE} == x86_64 ]]; then
+        curl "https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-388.0.0-linux-x86_64.tar.gz" -o /usr/local/bin/google-cloud-cli-388.0.0-linux-x86_64.tar.gz || sudo curl "https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-388.0.0-linux-x86_64.tar.gz" -o /usr/local/bin/google-cloud-cli-388.0.0-linux-x86_64.tar.gz
+        tar -xvf /usr/local/bin/google-cloud-cli-388.0.0-linux-x86_64.tar.gz -C /usr/local/bin || sudo tar -xvf /usr/local/bin/google-cloud-cli-388.0.0-linux-x86_64.tar.gz -C /usr/local/bin 
+        rm -fr /usr/local/bin/google-cloud-cli-* || sudo rm -fr /usr/local/bin/google-cloud-cli-*
+        /usr/local/bin/google-cloud-sdk/install.sh -q --path-update true --rc-path ~/.bashrc || sudo /usr/local/bin/google-cloud-sdk/install.sh -q --path-update true --rc-path ~/.bashrc
+        echo "alias gcloud='/usr/local/bin/google-cloud-sdk/bin/gcloud'">> ~/.bashrc || sudo echo "alias gcloud='/usr/local/bin/google-cloud-sdk/bin/gcloud'">> ~/.bashrc
+        source ~/.bashrc || sudo source ~/.bashrc
+        
+    elif [[ "$DISTRO" == *Ubuntu* || "$DISTRO" == *Debian* || "$DISTRO" == *RED*HAT* || "$DISTRO" == *RHEL* || "$DISTRO" == *CentOS* || "$DISTRO" == Fedora  || "$DISTRO" == *Red*Hat*Enterprise*Linux* ]] && [[ ${ARCHITECTURE} == arm64 || ${ARCHITECTURE} == Arm64  ]]; then
+        curl "https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-388.0.0-linux-arm.tar.gz" -o /usr/local/bin/google-cloud-cli-388.0.0-linux-x86_64.tar.gz || sudo curl "https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-388.0.0-linux-arm.tar.gz" -o /usr/local/bin/google-cloud-cli-388.0.0-linux-x86_64.tar.gz
+        tar -xvf /usr/local/bin/google-cloud-cli-388.0.0-linux-arm.tar.gz -C /usr/local/bin || sudo tar -xvf /usr/local/bin/google-cloud-cli-388.0.0-linux-arm.tar.gz -C /usr/local/bin
+        rm -fr /usr/local/bin/google-cloud-cli-* || sudo rm -fr /usr/local/bin/google-cloud-cli-*
+        /usr/local/bin/google-cloud-sdk/install.sh -q --path-update true --rc-path ~/.bashrc || sudo /usr/local/bin/google-cloud-sdk/install.sh -q --path-update true --rc-path ~/.bashrc
+        echo "alias gcloud='/usr/local/bin/google-cloud-sdk/bin/gcloud'">> ~/.bashrc || sudo echo "alias gcloud='/usr/local/bin/google-cloud-sdk/bin/gcloud'">> ~/.bashrc
+        source ~/.bashrc || sudo source ~/.bashrc
+
+    elif [[ ${ARCHITECTURE} == x86_64 ]]; then
+        curl "https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-388.0.0-darwin-x86_64.tar.gz" -o /usr/local/bin/google-cloud-cli-388.0.0-darwin-x86_64.tar.gz || sudo curl "https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-388.0.0-darwin-x86_64.tar.gz" -o /usr/local/bin/google-cloud-cli-388.0.0-darwin-x86_64.tar.gz
+        tar -xvf /usr/local/bin/google-cloud-cli-388.0.0-darwin-x86_64.tar.gz || sudo tar -xvf /usr/local/bin/google-cloud-cli-388.0.0-darwin-x86_64.tar.gz
+        rm -fr /usr/local/bin/google-cloud-cli-* || sudo rm -fr /usr/local/bin/google-cloud-cli-*
+        /usr/local/bin/google-cloud-sdk/install.sh -q --path-update true --rc-path ~/.zshrc || sudo /usr/local/bin/google-cloud-sdk/install.sh -q --path-update true --rc-path ~/.zshrc
+        echo "alias gcloud='/usr/local/bin/google-cloud-sdk/bin/gcloud'">> ~/.zshrc || sudo echo "alias gcloud='/usr/local/bin/google-cloud-sdk/bin/gcloud'">> ~/.zshrc
+        source ~/.zshrc || sudo source ~/.zshrc
+        
+    else
+        curl "https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-388.0.0-darwin-arm.tar.gz" -o /usr/local/bin/google-cloud-cli-388.0.0-darwin-arm.tar.gz || sudo curl "https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-388.0.0-darwin-arm.tar.gz" -o /usr/local/bin/google-cloud-cli-388.0.0-darwin-arm.tar.gz
+        tar -xvf /usr/local/bin/google-cloud-cli-388.0.0-darwin-arm.tar.gz || sudo tar -xvf /usr/local/bin/google-cloud-cli-388.0.0-darwin-arm.tar.gz
+        rm -fr /usr/local/bin/google-cloud-cli-* || sudo rm -fr /usr/local/bin/google-cloud-cli-*
+        /usr/local/bin/google-cloud-sdk/install.sh -q --path-update true --rc-path ~/.zshrc || sudo /usr/local/bin/google-cloud-sdk/install.sh -q --path-update true --rc-path ~/.zshrc
+        echo "alias gcloud='/usr/local/bin/google-cloud-sdk/bin/gcloud'">> ~/.zshrc || sudo echo "alias gcloud='/usr/local/bin/google-cloud-sdk/bin/gcloud'">> ~/.zshrc
+        source ~/.zshrc || sudo source ~/.zshrc
+    fi
+}
+
+# AZURE CLI
+install_azure(){
+    if [[ "$DISTRO" == *Ubuntu* || "$DISTRO" == *Debian*  ]]; then
+        curl -sL https://aka.ms/InstallAzureCLIDeb | bash || sudo curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+    elif [[ "$DISTRO" == *RED*HAT* || "$DISTRO" == *RHEL* || "$DISTRO" == *Red*Hat*Enterprise*Linux* || "$DISTRO" == *CentOS* || "$DISTRO" == Fedora ]]; then
+        rpm --import https://packages.microsoft.com/keys/microsoft.asc || sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc
+        dnf install -y https://packages.microsoft.com/config/rhel/8/packages-microsoft-prod.rpm || sudo dnf install -y https://packages.microsoft.com/config/rhel/8/packages-microsoft-prod.rpm
+        echo -e "[azure-cli]
+        name=Azure CLI
+        baseurl=https://packages.microsoft.com/yumrepos/azure-cli
+        enabled=1
+        gpgcheck=1
+        gpgkey=https://packages.microsoft.com/keys/microsoft.asc" | $(tee /etc/yum.repos.d/azure-cli.repo || sudo tee /etc/yum.repos.d/azure-cli.repo)
+        dnf install -y azure-cli || sudo dnf install -y azure-cli
+    else
+        brew update && brew install azure-cli || sudo brew update && sudo brew install azure-cli
+    fi 
+}
+
+# AMAZON CLOUD CLI
+install_aws(){
+    if [[ "$DISTRO" == *Ubuntu* || "$DISTRO" == *Debian* || "$DISTRO" == *RED*HAT* || "$DISTRO" == *RHEL* || "$DISTRO" == *CentOS* || "$DISTRO" == Fedora  || "$DISTRO" == *Red*Hat*Enterprise*Linux* ]] && [[ ${ARCHITECTURE} == x86_64 ]]; then
+        wget "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" || sudo wget "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" 
+        unzip aws*.zip || sudo unzip aws*.zip
+        rm -fr awscli-exe* || sudo rm -fr awscli-exe*
+        ./aws/install || ./aws/install --update || sudo ./aws/install || sudo ./aws/install --update
+        rm -fr aws || sudo rm -fr aws
+        
+
+    elif [[ "$DISTRO" == *Ubuntu* || "$DISTRO" == *Debian* || "$DISTRO" == *RED*HAT* || "$DISTRO" == *RHEL* || "$DISTRO" == *CentOS* || "$DISTRO" == Fedora  || "$DISTRO" == *Red*Hat*Enterprise*Linux* ]] && [[ ${ARCHITECTURE} == arm64 || ${ARCHITECTURE} == Arm64  ]]; then
+        wget "https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip"
+        unzip aws*.zip
+        rm -fr awscli-exe*
+        ./aws/install || ./aws/install --update
+        rm -fr aws || sudo -fr aws
+
+    else
+        wget "https://awscli.amazonaws.com/AWSCLIV2.pkg"  || sudo wget "https://awscli.amazonaws.com/AWSCLIV2.pkg"
+        installer -pkg AWSCLIV2.pkg -target / || sudo installer -pkg AWSCLIV2.pkg -target / 
+    fi
+}
+
+# GITHUB CLI
+install_gh(){
+    if [[ "$DISTRO" == *Ubuntu* || "$DISTRO" == *Debian*  ]]; then
+        curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | $(dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg || sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg)
+        echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | $(tee /etc/apt/sources.list.d/github-cli.list > /dev/null || sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null)
+        apt update || sudo apt update
+        apt install -y gh || sudo apt install -y gh
+        snap install gh || sudo snap install gh
+
+    elif [[ "$DISTRO" == *RED*HAT* || "$DISTRO" == *RHEL* || "$DISTRO" == *Red*Hat*Enterprise*Linux* || "$DISTRO" == *CentOS* || "$DISTRO" == Fedora ]]; then
+        dnf install -yq 'dnf-command(config-manager)' || sudo dnf install -yq 'dnf-command(config-manager)'
+        dnf config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo || sudo dnf config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo
+        dnf -yq install gh || sudo dnf -yq install gh 
+    else
+        brew install gh || brew upgrade gh || sudo brew install gh || sudo brew upgrade gh
+    fi
+} 
+
+# ARGO CD CLI
+install_argo(){
+    if [[ "$DISTRO" == *Ubuntu* || "$DISTRO" == *Debian* || "$DISTRO" == *RED*HAT* || "$DISTRO" == *RHEL* || "$DISTRO" == *CentOS* || "$DISTRO" == Fedora  || "$DISTRO" == *Red*Hat*Enterprise*Linux* ]]; then
+        curl -sSL https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64 -o /usr/local/bin/argocd || sudo curl -sSL https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64 -o /usr/local/bin/argocd
+        chmod +x /usr/local/bin/argocd || sudo chmod +x /usr/local/bin/argocd
+        clear
+    else
+        curl -sSL -o /usr/local/bin/argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-darwin-amd64 || sudo curl -sSL -o /usr/local/bin/argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-darwin-amd64
+        chmod +x /usr/local/bin/argocd || sudo chmod +x /usr/local/bin/argocd
+        clear
+        if [[ -z "$(which argocd)" ]]; then
+            brew install argocd || sudo brew install argocd
+        fi
+    fi
+}
+
+# Tekton CLI
+install_tkn(){
+    if [[ "$DISTRO" == *Ubuntu* || "$DISTRO" == *Debian* ]] && [[ ${ARCHITECTURE} == x86_64 ]]; then
+        apt update || sudo apt update
+        apt install -y gnupg || sudo apt install -y gnupg
+        apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3EFE0E0A2F2F60AA || sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3EFE0E0A2F2F60AA
+        echo "deb http://ppa.launchpad.net/tektoncd/cli/ubuntu eoan main"|sudo tee /etc/apt/sources.list.d/tektoncd-ubuntu-cli.list || echo "deb http://ppa.launchpad.net/tektoncd/cli/ubuntu eoan main"| tee /etc/apt/sources.list.d/tektoncd-ubuntu-cli.list
+        apt update && apt install -y tektoncd-cli || sudo apt update && sudo apt install -y tektoncd-cli
+        if [[ -z "$(which tkn)" ]]; then
+            curl -L "https://github.com/tektoncd/cli/releases/download/v0.24.0/tektoncd-cli-0.24.0_Linux-64bit.deb" -o /usr/local/bin/tektoncd-cli-0.24.0_Linux-64bit.deb && dpkg -i /usr/local/bin/tektoncd-cli-0.24.0_Linux-64bit.deb || sudo curl -L "https://github.com/tektoncd/cli/releases/download/v0.24.0/tektoncd-cli-0.24.0_Linux-64bit.deb" -o /usr/local/bin/tektoncd-cli-0.24.0_Linux-64bit.deb && sudo dpkg -i /usr/local/bin/tektoncd-cli-0.24.0_Linux-64bit.deb
+        fi
+    elif [[ "$DISTRO" == *Ubuntu* || "$DISTRO" == *Debian* ]] && [[ ${ARCHITECTURE} == Arm64 || ${ARCHITECTURE} == arm64 ]]; then
+        apt update || sudo apt update
+        apt install -y gnupg || sudo apt install -y gnupg
+        apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3EFE0E0A2F2F60AA || sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3EFE0E0A2F2F60AA
+        echo "deb http://ppa.launchpad.net/tektoncd/cli/ubuntu eoan main"|$(sudo tee /etc/apt/sources.list.d/tektoncd-ubuntu-cli.list || tee /etc/apt/sources.list.d/tektoncd-ubuntu-cli.list)
+        apt update && apt install -y tektoncd-cli || sudo apt update && sudo apt install -y tektoncd-cli
+        if [[ -z "$(which tkn)" ]]; then
+            curl -L "https://github.com/tektoncd/cli/releases/download/v0.24.0/tektoncd-cli-0.24.0_Linux-ARM64.deb" -o /usr/local/bin/tektoncd-cli-0.24.0_Linux-ARM64.deb && dpkg -i /usr/local/bin/tektoncd-cli-0.24.0_Linux-ARM64bit.deb || sudo curl -L "https://github.com/tektoncd/cli/releases/download/v0.24.0/tektoncd-cli-0.24.0_Linux-ARM64.deb" -o /usr/local/bin/tektoncd-cli-0.24.0_Linux-ARM64.deb && dpkg -i /usr/local/bin/tektoncd-cli-0.24.0_Linux-ARM64bit.deb 
+        fi
+    elif [[ "$DISTRO" == *RED*HAT* || "$DISTRO" == *RHEL* || "$DISTRO" == *CentOS* || "$DISTRO" == Fedora  || "$DISTRO" == *Red*Hat*Enterprise*Linux* ]] && [[ ${ARCHITECTURE} == x86_64 ]]; then
+        rpm -Uvh -f --reinstall https://github.com/tektoncd/cli/releases/download/v0.24.0/tektoncd-cli-0.24.0_Linux-64bit.rpm || sudo rpm -Uvh -f --reinstall https://github.com/tektoncd/cli/releases/download/v0.24.0/tektoncd-cli-0.24.0_Linux-64bit.rpm
+        if [[ -z "$(which tkn)" ]]; then
+            dnf copr enable chmouel/tektoncd-cli && dnf install tektoncd-cli || sudo dnf copr enable chmouel/tektoncd-cli && sudo dnf install tektoncd-cli
+        fi
+    elif [[ "$DISTRO" == *RED*HAT* || "$DISTRO" == *RHEL* || "$DISTRO" == *CentOS* || "$DISTRO" == Fedora  || "$DISTRO" == *Red*Hat*Enterprise*Linux* ]] && [[ ${ARCHITECTURE} == Arm64 || ${ARCHITECTURE} == arm64 ]]; then
+        rpm -Uvh -f --reinstall https://github.com/tektoncd/cli/releases/download/v0.24.0/tektoncd-cli-0.24.0_Linux-ARM64.rpm || sudo rpm -Uvh -f --reinstall https://github.com/tektoncd/cli/releases/download/v0.24.0/tektoncd-cli-0.24.0_Linux-ARM64.rpm
+        if [[ -z "$(which tkn)" ]]; then
+            dnf copr enable chmouel/tektoncd-cli && dnf install tektoncd-cli || sudo dnf copr enable chmouel/tektoncd-cli && sudo dnf install tektoncd-cli
+        fi
+    else
+        wget https://github.com/tektoncd/cli/releases/download/v0.24.0/tkn_0.24.0_Darwin_all.tar.gz || sudo wget https://github.com/tektoncd/cli/releases/download/v0.24.0/tkn_0.24.0_Darwin_all.tar.gz
+        tar -xvzf tkn_0.24.0_Darwin_all.tar.gz || sudo tar -xvzf tkn_0.24.0_Darwin_all.tar.gz
+        if [[ -a /tkn ]]; then 
+            chmod +x tkn || sudo chmod +x tkn
+        else
+            brew install tektoncd-cli || sudo brew install tektoncd-cli
+        fi
+    fi
+}
+# OC CLI
+install_oc(){
+    if [[ "$DISTRO" == *Ubuntu* || "$DISTRO" == *Debian* || "$DISTRO" == *RED*HAT* || "$DISTRO" == *RHEL* || "$DISTRO" == *CentOS* || "$DISTRO" == Fedora  || "$DISTRO" == *Red*Hat*Enterprise*Linux* ]]; then
+        wget https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/openshift-client-linux.tar.gz -P /usr/local/bin || sudo wget https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/openshift-client-linux.tar.gz -P /usr/local/bin
+        tar xvzf /usr/local/bin/openshift*.tar.gz -C /usr/local/bin || sudo tar xvzf /usr/local/bin/openshift*.tar.gz -C /usr/local/bin
+        if [[ -a /usr/local/bin/oc ]]; then
+            chmod +x /usr/local/bin/oc || sudo chmod +x /usr/local/bin/oc
+            echo "alias oc='/usr/local/bin/oc'" >> ~/.bashrc || sudo echo "alias oc='/usr/local/bin/oc'" >> ~/.bashrc
+        else
+            echo "/usr/local/bin/oc not found"
+        fi
+    elif [[ ${ARCHITECTURE} == arm64 || ${ARCHITECTURE} == Arm64 ]]; then
+        wget https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/openshift-client-mac-arm64.tar.gz -P /usr/local/bin || sudo wget https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/openshift-client-mac-arm64.tar.gz -P /usr/local/bin
+        tar xvzf /usr/local/bin/openshift*.tar.gz -C /usr/local/bin || sudo tar xvzf /usr/local/bin/openshift*.tar.gz -C /usr/local/bin
+        if [[ -a /usr/local/bin/oc ]]; then
+            chmod +x /usr/local/bin/oc || sudop chmod +x /usr/local/bin/oc
+            echo "alias oc='/usr/local/bin/oc'" >> ~/.zshrc || sudo echo "alias oc='/usr/local/bin/oc'" >> ~/.zshrc
+        else
+            echo "/usr/local/bin/oc not found"
+        fi
+        if [[ -z "$(which oc)" ]]; then
+            brew install openshift-cli || brew upgrade openshift-cli || sudo brew install openshift-cli ||sudo brew upgrade openshift-cli
+        fi
+    else
+        wget https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/openshift-client-mac.tar.gz -P /usr/local/bin || sudo wget https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/openshift-client-mac.tar.gz -P /usr/local/bin
+        tar xvzf /usr/local/bin/openshift*.tar.gz -C /usr/local/bin || sudo tar xvzf /usr/local/bin/openshift*.tar.gz -C /usr/local/bin
+        if [[ -a /usr/local/bin/oc ]]; then
+            chmod +x /usr/local/bin/oc || sudo chmod +x /usr/local/bin/oc
+            echo "alias oc='/usr/local/bin/oc'" >> ~/.zshrc || sudo echo "alias oc='/usr/local/bin/oc'" >> ~/.zshrc
+        else
+            echo "/usr/local/bin/oc not found"
+        fi
+        if [[ -z "$(which oc)" ]]; then
+            brew install openshift-cli || brew upgrade openshift-cli || sudo brew install openshift-cli || sudo brew upgrade openshift-cli
+        fi
+    fi
+}
+# ISTIO CLI
+install_istio(){
+        curl -sL https://istio.io/downloadIstioctl | sh - || curl -sL https://istio.io/downloadIstioctl | sudo sh -
+        export PATH=$PATH:$HOME/.istioctl/bin || sudo export PATH=$PATH:$HOME/.istioctl/bin
+}
+
+# TERRAFORM CLI
+install_terraform(){
+    if [[ "$DISTRO" == *Ubuntu* || "$DISTRO" == *Debian*  ]]; then
+        curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add - || sudo curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add -
+        apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main" -y || sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main" -y
+        apt-get update && apt-get install terraform -y || sudo apt-get update && apt-get install terraform -y
+        snap install terraform --classic || sudo snap install terraform --classic
+        clear
+    elif [[ "$DISTRO" == *RED*HAT* || "$DISTRO" == *RHEL* || "$DISTRO" == *Red*Hat*Enterprise*Linux* || "$DISTRO" == *CentOS* || "$DISTRO" == Fedora ]]; then
+        yum install -y yum-utils || dnf install -y dnf-plugins-core || sudo yum install -y yum-utils || sudo  dnf install -y dnf-plugins-core
+        yum-config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo || dnf config-manager --add-repo https://rpm.releases.hashicorp.com/fedora/hashicorp.repo || sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo || sudo dnf config-manager --add-repo https://rpm.releases.hashicorp.com/fedora/hashicorp.repo
+        yum -y install terraform || dnf -y install terraform || sudo yum -y install terraform || sudo dnf -y install terraform
+    else
+        brew tap hashicorp/tap || sudo brew tap hashicorp/tap
+        brew install hashicorp/tap/terraform || sudo brew install hashicorp/tap/terraform
+        brew update || sudo brew update
+        brew upgrade hashicorp/tap/terraform || sudo brew upgrade hashicorp/tap/terraform
+    fi 
+}
+
+# Daffy
+install_daffy(){
+   echo "export DAFFY_ACCEPT_WARRANTY='Y'" >> ~/.bashrc || sudo echo "export DAFFY_ACCEPT_WARRANTY='Y'" >> ~/.bashrc
+   source ~/.bashrc || sudo source ~/.bashrc
+   wget http://get.daffy-installer.com/download-scripts/daffy-init.sh  || sudo wget http://get.daffy-installer.com/download-scripts/daffy-init.sh
+   chmod 777 daffy-init.sh || sudo chmod 777 daffy-init.sh 
+   ./daffy-init.sh || sudo ./daffy-init.sh
+   /data/daffy/refresh.sh || sudo /data/daffy/refresh.sh
+    
+} 
+
+args=$@
+
+case "${args[@]}" in 
+  *"--installDep"*|*"--installdep"*|*"--installDEP"*|*"installDEP"*|*"installdep"*)
+    install_deps
+  ;;
+esac
+
+case "${args[@]}" in 
+  *"--installIbmc"*|*"--installibmc"*|*"--installIBMC"*|*"installIbmc"*|*"installibmc"*|*"installIBMC"*)
+    install_ibmc
+  ;;
+esac
+
+case "${args[@]}" in 
+  *"--installAws"*|*"--installaws"*|*"--installAWS"*|*"installAws"*|*"installaws"*|*"installAWS"*)
+    install_aws
+  ;;
+esac
+
+case "${args[@]}" in 
+  *"--installAz"*|*"--installaz"*|*"--installAWS"*|*"installAz"*|*"installaz"*|*"installAZ"*)
+    install_azure
+  ;;
+esac
+
+case "${args[@]}" in 
+  *"--installGcloud"*|*"--installgcloud"*|*"--installGCLOUD"*|*"installGcloud"*|*"installgcloud"*|*"installGCLOUD"*)
+    install_gcloud
+  ;;
+esac
+
+case "${args[@]}" in 
+  *"--installGh"*|*"--installgh"*|*"--installGH"*|*"installGh"*|*"installgh"*|*"installGH"*)
+    install_gh
+  ;;
+esac
+
+case "${args[@]}" in 
+  *"--installTkn"*|*"--installtkn"*|*"--installTKN"*|*"installTkn"*|*"installtkn"*|*"installTKN"*)
+    install_tkn
+  ;;
+esac
+
+case "${args[@]}" in 
+  *"--installOc"*|*"--installoc"*|*"--installOC"*|*"installOc"*|*"installoc"*|*"installOC"*)
+    install_oc
+  ;;
+esac
+
+case "${args[@]}" in 
+  *"--installArgocd"*|*"--installargocd"*|*"--installARGOCD"*|*"installArgocd"*|*"installargocd"*|*"installARGOCD"*)
+    install_argo
+  ;;
+esac
+
+case "${args[@]}" in 
+  *"--installIstio"*|*"--installistio"*|*"--installISTIO"*|*"installIstio"*|*"installistio"*|*"installISTIO"*)
+    install_istio
+  ;;
+esac
+
+case "${args[@]}" in 
+  *"--installTerraform"*|*"--installterraform"*|*"--installTERRAFORM"*|*"installTerraform"*|*"installterraform"*|*"installTERRAFORM"*)
+    install_terraform
+  ;;
+esac
+
+case "${args[@]}" in 
+  *"--installDaffy"*|*"--installdaffy"*|*"--installDAFFY"*|*"installDaffy"*|*"installdaffy"*|*"installDAFFY"*)
+    install_daffy
+  ;;
+esac
+
+case "${args[@]}" in 
+  *"--all"*|*"-a"*|*"-A"*)
+    install_deps
+    install_ibmc
+    install_gcloud
+    install_azure
+    install_aws
+    install_gh
+    install_argo
+    install_tkn
+    install_oc
+    install_istio
+    install_terraform
+    install_daffy
+    
+  ;;
+esac
