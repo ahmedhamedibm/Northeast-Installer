@@ -411,6 +411,6 @@ case "${args[@]}" in
     install_istio
     install_terraform
     install_daffy
-    
+    install_cpd
   ;;
 esac
