@@ -281,6 +281,23 @@ install_terraform(){
     fi 
 }
 
+# Cpd CLi
+install_cpd(){
+    if [[ "$DISTRO" == *Ubuntu* || "$DISTRO" == *Debian* || "$DISTRO" == *RED*HAT* || "$DISTRO" == *RHEL* || "$DISTRO" == *CentOS* || "$DISTRO" == Fedora  || "$DISTRO" == *Red*Hat*Enterprise*Linux* ]]; then
+        wget https://github.com/IBM/cpd-cli/releases/download/v11.2.0/cpd-cli-linux-EE-11.2.0.tgz || sudo wget https://github.com/IBM/cpd-cli/releases/download/v11.2.0/cpd-cli-linux-EE-11.2.0.tgz
+        tar -zxvf cpd-cli-linux-EE-11.2.0.tgz || sudo tar -zxvf cpd-cli-linux-EE-11.2.0.tgz
+        rm -rf cpd-cli-linux-EE-11.2.0.tgz || sudo rm -rf cpd-cli-linux-EE-11.2.0.tgz
+        echo "export PATH=$PWD/cpd-cli-linux-EE-11.2.0-40:$PATH" >> ~/.bashrc || sudo echo "export PATH=$PWD/cpd-cli-linux-EE-11.2.0-40:$PATH" >> ~/.bashrc
+        source ~/.bashrc
+    else
+        wget https://github.com/IBM/cpd-cli/releases/download/v11.2.0/cpd-cli-darwin-EE-11.2.0.tgz || sudo wget https://github.com/IBM/cpd-cli/releases/download/v11.2.0/cpd-cli-darwin-EE-11.2.0.tgz
+        tar -zxvf cpd-cli-darwin-EE-11.2.0.tgz || sudo tar -zxvf cpd-cli-darwin-EE-11.2.0.tgz
+        rm -rf cpd-cli-darwin-EE-11.2.0.tgz || sudo rm -rf cpd-cli-darwin-EE-11.2.0.tgz
+        echo "export PATH=$PWD/cpd-cli-darwin-EE-11.2.0-40:$PATH" >> ~/.bashrc || sudo echo "export PATH=$PWD/cpd-cli-darwin-EE-11.2.0-40:$PATH" >> ~/.bashrc
+        source ~/.zshrc
+
+} 
+
 # Daffy
 install_daffy(){
    echo "export DAFFY_ACCEPT_WARRANTY='Y'" >> ~/.bashrc || sudo echo "export DAFFY_ACCEPT_WARRANTY='Y'" >> ~/.bashrc
@@ -372,6 +389,12 @@ case "${args[@]}" in
 esac
 
 case "${args[@]}" in 
+  *"--installCpd"*|*"--installcpd"*|*"--installCPD"*|*"installCpd"*|*"installcpd"*|*"installCPD"*)
+    install_daffy
+  ;;
+esac
+
+case "${args[@]}" in 
   *"--all"*|*"-a"*|*"-A"*)
     install_deps
     install_ibmc
@@ -381,7 +404,9 @@ case "${args[@]}" in
     install_gh
     install_argo
     install_tkn
+    install_podman
     install_oc
+    install_cpd
     install_istio
     install_terraform
     install_daffy
