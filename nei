@@ -21,6 +21,7 @@ install_deps(){
         apt-get install -y snap software-properties-common apt-transport-https wget curl unzip vim iproute2 git || sudo apt-get install -y snap software-properties-common apt-transport-https wget curl unzip vim iproute2 git
     elif [[ "$DISTRO" == *RED*HAT* || "$DISTRO" == *RHEL* || "$DISTRO" == *CentOS* || "$DISTRO" == Fedora  || "$DISTRO" == *Red*Hat*Enterprise*Linux* ]]; then
         yum update -y || sudo yum update -y
+        dnf update -y || sudo dnf update -y
         yum install -y wget curl unzip python36 vim git || sudo yum install -y wget curl unzip python36 vim
     else 
         if [[ -z "$(which brew)" && -n "$(which ruby)" ]]; then   
@@ -190,6 +191,33 @@ install_tkn(){
         fi
     fi
 }
+
+# PODMAN
+install_podman(){
+    if [[ "$DISTRO" == *Ubuntu* || "$DISTRO" == *Debian* ]]; then
+        apt-get install -y podman || sudo apt-get install -y podman
+        if [[ -z "$(type -P podman)" ]]; then
+            source /etc/os-release
+            sh -c "echo 'deb http://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_${VERSION_ID}/ /' > /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list" || sudo sh -c "echo 'deb http://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_${VERSION_ID}/ /' > /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list"
+            wget -nv https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable/xUbuntu_${VERSION_ID}/Release.key -O- | apt-key add - || sudo wget -nv https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable/xUbuntu_${VERSION_ID}/Release.key -O- | sudo apt-key add -
+            apt update || sudo apt update
+            apt -y install podman || sudo apt -y install podman
+        fi
+    elif [[ "$DISTRO" == *RED*HAT* || "$DISTRO" == *RHEL* || "$DISTRO" == *CentOS* || "$DISTRO" == Fedora  || "$DISTRO" == *Red*Hat*Enterprise*Linux* ]]; then
+        dnf -y install podman || yum -y install podman || sudo dnf install podman || sudo yum install podman
+        if [[ -z "$(type -P podman)" ]]; then
+            dnf config-manager --set-enabled powertools || sudo dnf config-manager --set-enabled powertools
+            dnf -y update || sudo dnf -y update
+            dnf install -y @container-tools  || sudo dnf install -y @container-tools 
+        fi
+    else 
+        brew install podman || sudo brew install podman
+        podman machine init || sudo podman machine init
+        podman machine start || sudo podman machine start
+    fi
+
+}
+
 # OC CLI
 install_oc(){
     if [[ "$DISTRO" == *Ubuntu* || "$DISTRO" == *Debian* || "$DISTRO" == *RED*HAT* || "$DISTRO" == *RHEL* || "$DISTRO" == *CentOS* || "$DISTRO" == Fedora  || "$DISTRO" == *Red*Hat*Enterprise*Linux* ]]; then
@@ -260,7 +288,6 @@ install_daffy(){
    wget http://get.daffy-installer.com/download-scripts/daffy-init.sh  || sudo wget http://get.daffy-installer.com/download-scripts/daffy-init.sh
    chmod 777 daffy-init.sh || sudo chmod 777 daffy-init.sh 
    ./daffy-init.sh || sudo ./daffy-init.sh
-   /data/daffy/refresh.sh || sudo /data/daffy/refresh.sh
     
 } 
 
@@ -305,6 +332,12 @@ esac
 case "${args[@]}" in 
   *"--installTkn"*|*"--installtkn"*|*"--installTKN"*|*"installTkn"*|*"installtkn"*|*"installTKN"*)
     install_tkn
+  ;;
+esac
+
+case "${args[@]}" in 
+  *"--installPodman"*|*"--installpodman"*|*"--installPODMAN"*|*"installPodman"*|*"installpodman"*|*"installPODMAN"*)
+    install_podman
   ;;
 esac
 
