@@ -295,6 +295,7 @@ install_cpd(){
         rm -rf cpd-cli-darwin-EE-11.2.0.tgz || sudo rm -rf cpd-cli-darwin-EE-11.2.0.tgz
         echo "export PATH=$PWD/cpd-cli-darwin-EE-11.2.0-40:$PATH" >> ~/.bashrc || sudo echo "export PATH=$PWD/cpd-cli-darwin-EE-11.2.0-40:$PATH" >> ~/.bashrc
         source ~/.zshrc
+    fi
 
 } 
 
