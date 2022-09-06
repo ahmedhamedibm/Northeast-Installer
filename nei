@@ -391,7 +391,7 @@ esac
 
 case "${args[@]}" in 
   *"--installCpd"*|*"--installcpd"*|*"--installCPD"*|*"installCpd"*|*"installcpd"*|*"installCPD"*)
-    install_daffy
+    install_cpd
   ;;
 esac
 
