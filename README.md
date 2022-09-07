@@ -83,5 +83,5 @@ Multple tools can be installed at once as shown below.
 
 ## Warning
 
-This is for internal use only to simplify the process of installing tools often needed on blank environments such as virtual machines, bastions, and containers. The script has ony been minimally tested on Ubuntu and Rhel 8 machines, primariily vsi instances on IBM Cloud and depending on date of use may not be currently maintained.
+This is for internal use only to simplify the process of installing tools often needed on blank environments such as virtual machines, bastions, and containers. The script has ony been minimally tested on Ubuntu and Rhel 8 machines, primarily vsi instances on IBM Cloud and depending on date of use may not be currently maintained.
 The nei tool does not currently allow specifying the version of the cloud tool you would like to install, therefore it may not be compatible for your needs. However, for most of the tools that nei can install it will default to installing latest.
