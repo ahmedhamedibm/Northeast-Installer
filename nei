@@ -18,7 +18,7 @@ install_deps(){
         apt-get update -y || sudo apt-get update -y
         apt-get install -y apt-utils || sudo apt-get install -y apt-utils
         apt-get -y upgrade || sudo apt-get -y upgrade
-        apt-get install -y snap software-properties-common apt-transport-https wget curl unzip vim iproute2 git jq || sudo apt-get install -y snap software-properties-common apt-transport-https wget curl unzip vim iproute2 git jq
+        apt-get install -y snap software-properties-common apt-transport-https wget curl unzip vim iproute2 git jq python3.6 || sudo apt-get install -y snap software-properties-common apt-transport-https wget curl unzip vim iproute2 git jq python3.6
     elif [[ "$DISTRO" == *RED*HAT* || "$DISTRO" == *RHEL* || "$DISTRO" == *CentOS* || "$DISTRO" == Fedora  || "$DISTRO" == *Red*Hat*Enterprise*Linux* ]]; then
         yum update -y || sudo yum update -y
         dnf update -y || sudo dnf update -y
@@ -288,13 +288,15 @@ install_cpd(){
         wget https://github.com/IBM/cpd-cli/releases/download/v11.2.0/cpd-cli-linux-EE-11.2.0.tgz || sudo wget https://github.com/IBM/cpd-cli/releases/download/v11.2.0/cpd-cli-linux-EE-11.2.0.tgz
         tar -zxvf cpd-cli-linux-EE-11.2.0.tgz || sudo tar -zxvf cpd-cli-linux-EE-11.2.0.tgz
         rm -rf cpd-cli-linux-EE-11.2.0.tgz || sudo rm -rf cpd-cli-linux-EE-11.2.0.tgz
-        echo "export PATH=$PWD/cpd-cli-linux-EE-11.2.0-40:$PATH" >> ~/.bashrc || sudo echo "export PATH=$PWD/cpd-cli-linux-EE-11.2.0-40:$PATH" >> ~/.bashrc
+        mv cpd-cli-linux-EE-11.2.0-40 $HOME/bin/ || sudo mv cpd-cli-linux-EE-11.2.0-40 $HOME/bin/
+        echo 'export PATH=$PATH":$HOME/bin/cpd-cli-linux-EE-11.2.0-40"' >> ~/.bashrc || sudo echo 'export PATH=$PATH":$HOME/bin/cpd-cli-linux-EE-11.2.0-40"' >> ~/.bashrc
         source ~/.bashrc
     else
         wget https://github.com/IBM/cpd-cli/releases/download/v11.2.0/cpd-cli-darwin-EE-11.2.0.tgz || sudo wget https://github.com/IBM/cpd-cli/releases/download/v11.2.0/cpd-cli-darwin-EE-11.2.0.tgz
         tar -zxvf cpd-cli-darwin-EE-11.2.0.tgz || sudo tar -zxvf cpd-cli-darwin-EE-11.2.0.tgz
         rm -rf cpd-cli-darwin-EE-11.2.0.tgz || sudo rm -rf cpd-cli-darwin-EE-11.2.0.tgz
-        echo "export PATH=$PWD/cpd-cli-darwin-EE-11.2.0-40:$PATH" >> ~/.bashrc || sudo echo "export PATH=$PWD/cpd-cli-darwin-EE-11.2.0-40:$PATH" >> ~/.bashrc
+        mv cpd-cli-darwin-EE-11.2.0-40 $HOME/bin/ || sudo mv cpd-cli-darwin-EE-11.2.0-40 $HOME/bin/
+        echo 'export PATH=$PATH":$HOME/bin/cpd-cli-darwin-EE-11.2.0-40"' >> ~/.zshrc || sudo echo 'export PATH=$PATH":$HOME/bin/cpd-cli-darwin-EE-11.2.0-40"' >> ~/.zshrc
         source ~/.zshrc
     fi
 
