@@ -18,17 +18,18 @@ install_deps(){
         apt-get update -y || sudo apt-get update -y
         apt-get install -y apt-utils || sudo apt-get install -y apt-utils
         apt-get -y upgrade || sudo apt-get -y upgrade
-        apt-get install -y snap software-properties-common apt-transport-https wget curl unzip vim iproute2 git || sudo apt-get install -y snap software-properties-common apt-transport-https wget curl unzip vim iproute2 git
+        apt-get install -y snap software-properties-common apt-transport-https wget curl unzip vim iproute2 git jq || sudo apt-get install -y snap software-properties-common apt-transport-https wget curl unzip vim iproute2 git jq
     elif [[ "$DISTRO" == *RED*HAT* || "$DISTRO" == *RHEL* || "$DISTRO" == *CentOS* || "$DISTRO" == Fedora  || "$DISTRO" == *Red*Hat*Enterprise*Linux* ]]; then
         yum update -y || sudo yum update -y
         dnf update -y || sudo dnf update -y
-        yum install -y wget curl unzip python36 vim git || sudo yum install -y wget curl unzip python36 vim
+        yum install -y wget curl unzip python36 vim git jq || sudo yum install -y wget curl unzip python36 vim jq || dnf install -y wget curl unzip python36 vim git jq || sudo dnf install -y wget curl unzip python36 vim jq
     else 
         if [[ -z "$(which brew)" && -n "$(which ruby)" ]]; then   
             ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
         else
             /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
         fi
+        brew install jq || sudo brew install jq
     fi
 }
 
@@ -411,6 +412,5 @@ case "${args[@]}" in
     install_istio
     install_terraform
     install_daffy
-    install_cpd
   ;;
 esac
