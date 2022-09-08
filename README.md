@@ -29,7 +29,7 @@ source ~/.bashrc
 #####	*Note ensure the url is up-to-date in the curl command below by going to the raw view of the nei file in the repo and copying the link.
 ```bash
 # Curl the helper script to install the nei tool and place it in the file path ~/bin/nei
-curl -sSL https://raw.github.ibm.com/National-Northeast-1/Northeast-Cli-Installer/main/nei-helper.sh?token=AACTOHKJKK4GIWALQB7ZISLDENPRK | bash
+curl -sSL https://raw.github.ibm.com/National-Northeast-1/Northeast-Cli-Installer/main/nei-helper.sh?token=AACTOHILV7H6N6WL4OYGU2TDEOX3O | bash
 
 # Source your .bashrc to ensure the tool can be found
 source ~/.bashrc
