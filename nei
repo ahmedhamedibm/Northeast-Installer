@@ -306,11 +306,13 @@ install_cpd(){
 install_cloudctl() {
     if [[ "$DISTRO" == *Ubuntu* || "$DISTRO" == *Debian* || "$DISTRO" == *RED*HAT* || "$DISTRO" == *RHEL* || "$DISTRO" == *CentOS* || "$DISTRO" == Fedora  || "$DISTRO" == *Red*Hat*Enterprise*Linux* ]]; then
         curl -L https://github.com/IBM/cloud-pak-cli/releases/latest/download/cloudctl-linux-amd64.tar.gz -o cloudctl-linux-amd64.tar.gz || sudo curl -L https://github.com/IBM/cloud-pak-cli/releases/latest/download/cloudctl-linux-amd64.tar.gz -o cloudctl-linux-amd64.tar.gz
-        tar -zxvf cloudctl-linux-amd64.tar.gz || sudo tar -zxvf cloudctl-linux-amd64.tar.
+        tar -zxvf cloudctl-linux-amd64.tar.gz || sudo tar -zxvf cloudctl-linux-amd64.tar
+        mv cloudctl-linux-amd64 $HOME/bin/cloudctl || sudo mv cloudctl-linux-amd64 $HOME/bin/cloudctl
         rm -fr cloudctl-* || sudo rm -fr cloudctl-*
     else
         curl -L https://github.com/IBM/cloud-pak-cli/releases/latest/download/cloudctl-darwin-amd64.tar.gz -o cloudctl-darwin-amd64.tar.gz || curl -L https://github.com/IBM/cloud-pak-cli/releases/latest/download/cloudctl-darwin-amd64.tar.gz -o cloudctl-darwin-amd64.tar.gz
         tar -zxvf cloudctl-darwin-amd64.tar.gz || sudo -zxvf cloudctl-darwin-amd64.tar.gz
+        mv cloudctl-darwin-amd64 $HOME/bin/cloudctl || sudo mv cloudctl-darwin-amd64 $HOME/bin/cloudctl
         rm -fr cloudctl-* || sudo rm -fr cloudctl-*
     fi
 
@@ -328,6 +330,7 @@ install_daffy(){
 
 # Help Menu
 Help(){
+echo Options:
 
 echo --installdep Installs dependencies required for many of the other supported tools.
 
