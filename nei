@@ -509,6 +509,7 @@ case "${args[@]}" in
     install_istio
     install_terraform
     install_node_reload
+    install_cpd_env
     install_daffy
   ;;
 esac
