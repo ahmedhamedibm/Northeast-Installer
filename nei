@@ -283,7 +283,7 @@ install_terraform(){
 }
 
 # Cpd CLi
-install_cpd(){
+install_cpd_cli(){
     if [[ "$DISTRO" == *Ubuntu* || "$DISTRO" == *Debian* || "$DISTRO" == *RED*HAT* || "$DISTRO" == *RHEL* || "$DISTRO" == *CentOS* || "$DISTRO" == Fedora  || "$DISTRO" == *Red*Hat*Enterprise*Linux* ]]; then
         wget https://github.com/IBM/cpd-cli/releases/download/v11.2.0/cpd-cli-linux-EE-11.2.0.tgz || sudo wget https://github.com/IBM/cpd-cli/releases/download/v11.2.0/cpd-cli-linux-EE-11.2.0.tgz
         tar -zxvf cpd-cli-linux-EE-11.2.0.tgz || sudo tar -zxvf cpd-cli-linux-EE-11.2.0.tgz
@@ -328,37 +328,59 @@ install_daffy(){
     
 } 
 
+# Install Northeast nod reload tool
+install_node_reload(){
+    install_deps
+    curl -ssl https://raw.github.ibm.com/National-Northeast-1/Node-Reloader/main/node_reload_helper.sh?token=AACTOHMQTLK6NEG6HPZPSTLDETUE4 | bash || sudo curl -ssl https://raw.github.ibm.com/National-Northeast-1/Node-Reloader/main/node_reload_helper.sh?token=AACTOHMQTLK6NEG6HPZPSTLDETUE4 | bash
+    source ~/.bashrc || sudo source ~/.bashrc || source ~/.zshrc || sudo source ~/.zshrc   
+    
+}
+
+# Pull the Cloud Pak for Data Installation Environment from the Northeast Git Repo
+install_cpd_env(){
+    install_deps
+    install_ibmc
+    install_oc
+    install_podman
+    curl -sSL https://raw.github.ibm.com/National-Northeast-1/Cp4d-Cpdcli-Install/master/cpd_install_helper.sh?token=AACTOHP4M77RCCWJK6UTH7TDES5IW | bash || sudo curl -sSL https://raw.github.ibm.com/National-Northeast-1/Cp4d-Cpdcli-Install/master/cpd_install_helper.sh?token=AACTOHP4M77RCCWJK6UTH7TDES5IW | bash
+
+}
+
 # Help Menu
 Help(){
 echo Options:
 
 echo --installdep Installs dependencies required for many of the other supported tools.
 
-echo --installibmc Installs the ibmcloud command line tool.
+echo --installibmc Installs the ibmcloud Command line tool.
 
-echo --installaws Installs the aws command line tool.
+echo --installaws Installs the aws Command line tool.
 
-echo --installgcloud Installs the gcloud command line tool.
+echo --installgcloud Installs the gcloud Command line tool.
 
-echo --installaz Installs the azure command line tool.
+echo --installaz Installs the azure Command line tool.
 
-echo --installgh Installs the github command line tool.
+echo --installgh Installs the github Command line tool.
 
-echo --installtkn Installs the tekton command line tool.
+echo --installtkn Installs the tekton Command line tool.
 
 echo --installargocd Installs the argocd Command line tool.
 
-echo --installoc Installs the openshift command line tool.
+echo --installoc Installs the openshift Command line tool.
 
-echo --installpodman Installs the podman container runtime and command line tool.
+echo --installpodman Installs the podman container runtime and Command line tool.
 
-echo --installterraform Installs the terraform command line tool.
+echo --installterraform Installs the terraform Command line tool.
 
 echo --installistio Installs the istio control tool.
 
-echo --installcpd Installs the cpd-cli.
+echo --installcpdcli Installs the cpd-cli.
 
 echo --installcloudctl Installs the cloud control tool.
+
+echo --installnodereload Installs the cloud control tool.
+
+echo --installcpdenv Installs the cloud pak 4 data environment from the Northeast git repo.
 
 echo --installdaffy Installs the daffy tool created by the black belt team.
 
@@ -447,8 +469,20 @@ case "${args[@]}" in
 esac
 
 case "${args[@]}" in 
-  *"--installCpd"*|*"--installcpd"*|*"--installCPD"*|*"installCpd"*|*"installcpd"*|*"installCPD"*)
-    install_cpd
+  *"--installCpdcli"*|*"--installcpdcli"*|*"--installCPDCLI"*|*"installCpdcli"*|*"installcpdcli"*|*"installCPDCLI"*)
+    install_cpd_cli
+  ;;
+esac
+
+case "${args[@]}" in 
+  *"--installNodereload"*|*"--installnodereload"*|*"--installNODERELOAD"*|*"installNodereload"*|*"installnodereload"*|*"installNODERELOAD"*)
+    install_node_reload
+  ;;
+esac
+
+case "${args[@]}" in 
+  *"--installCpdenv"*|*"--installcpdenv"*|*"--installCPDENV"*|*"installCpdenv"*|*"installcpdenv"*|*"installCPDENV"*)
+    install_cpd_env
   ;;
 esac
 
@@ -470,9 +504,11 @@ case "${args[@]}" in
     install_tkn
     install_podman
     install_oc
-    install_cpd
+    install_cpd_cli
+    install_cloudctl
     install_istio
     install_terraform
+    install_node_reload
     install_daffy
   ;;
 esac
