@@ -300,7 +300,21 @@ install_cpd(){
         source ~/.zshrc
     fi
 
-} 
+}
+
+# Cloudctl
+install_cloudctl() {
+    if [[ "$DISTRO" == *Ubuntu* || "$DISTRO" == *Debian* || "$DISTRO" == *RED*HAT* || "$DISTRO" == *RHEL* || "$DISTRO" == *CentOS* || "$DISTRO" == Fedora  || "$DISTRO" == *Red*Hat*Enterprise*Linux* ]]; then
+        curl -L https://github.com/IBM/cloud-pak-cli/releases/latest/download/cloudctl-linux-amd64.tar.gz -o cloudctl-linux-amd64.tar.gz || sudo curl -L https://github.com/IBM/cloud-pak-cli/releases/latest/download/cloudctl-linux-amd64.tar.gz -o cloudctl-linux-amd64.tar.gz
+        tar -zxvf cloudctl-linux-amd64.tar.gz || sudo tar -zxvf cloudctl-linux-amd64.tar.
+        rm -fr cloudctl-* || sudo rm -fr cloudctl-*
+    else
+        curl -L https://github.com/IBM/cloud-pak-cli/releases/latest/download/cloudctl-darwin-amd64.tar.gz -o cloudctl-darwin-amd64.tar.gz || curl -L https://github.com/IBM/cloud-pak-cli/releases/latest/download/cloudctl-darwin-amd64.tar.gz -o cloudctl-darwin-amd64.tar.gz
+        tar -zxvf cloudctl-darwin-amd64.tar.gz || sudo -zxvf cloudctl-darwin-amd64.tar.gz
+        rm -fr cloudctl-* || sudo rm -fr cloudctl-*
+    fi
+
+}
 
 # Daffy
 install_daffy(){
@@ -311,6 +325,43 @@ install_daffy(){
    ./daffy-init.sh || sudo ./daffy-init.sh
     
 } 
+
+# Help Menu
+Help(){
+
+echo --installdep Installs dependencies required for many of the other supported tools.
+
+echo --installibmc Installs the ibmcloud command line tool.
+
+echo --installaws Installs the aws command line tool.
+
+echo --installgcloud Installs the gcloud command line tool.
+
+echo --installaz Installs the azure command line tool.
+
+echo --installgh Installs the github command line tool.
+
+echo --installtkn Installs the tekton command line tool.
+
+echo --installargocd Installs the argocd Command line tool.
+
+echo --installoc Installs the openshift command line tool.
+
+echo --installpodman Installs the podman container runtime and command line tool.
+
+echo --installterraform Installs the terraform command line tool.
+
+echo --installistio Installs the istio control tool.
+
+echo --installcpd Installs the cpd-cli.
+
+echo --installcloudctl Installs the cloud control tool.
+
+echo --installdaffy Installs the daffy tool created by the black belt team.
+
+echo --all Installs all the above listed tools.
+
+}
 
 args=$@
 
@@ -399,6 +450,12 @@ case "${args[@]}" in
 esac
 
 case "${args[@]}" in 
+  *"--installCloudctl"*|*"--installcloudctl"*|*"--installCLOUDCTL"*|*"installCloudctl"*|*"installcloudctl"*|*"installCLOUDCTL"*)
+    install_cloudctl
+  ;;
+esac
+
+case "${args[@]}" in 
   *"--all"*|*"-a"*|*"-A"*)
     install_deps
     install_ibmc
@@ -414,5 +471,11 @@ case "${args[@]}" in
     install_istio
     install_terraform
     install_daffy
+  ;;
+esac
+
+case "${args[@]}" in 
+  *"-h"*|*"--help"*)
+    Help
   ;;
 esac

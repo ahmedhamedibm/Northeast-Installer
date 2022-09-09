@@ -77,9 +77,13 @@ Multple tools can be installed at once as shown below.
 
 --installcpd           Installs the cpd-cli.
 
+--installcloudctl Installs the cloud control tool.
+
 --installdaffy         Installs the daffy tool created by the black belt team.
 
 --all                  Installs all the above listed tools.
+
+-h                     Displays help menu.
 
 ## Warning
 
