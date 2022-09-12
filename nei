@@ -391,6 +391,13 @@ echo --all Installs all the above listed tools.
 args=$@
 
 case "${args[@]}" in 
+  *"-h"*|*"--help"*)
+    Help
+    exit
+  ;;
+esac
+
+case "${args[@]}" in 
   *"--installDep"*|*"--installdep"*|*"--installDEP"*|*"installDEP"*|*"installdep"*)
     install_deps
   ;;
@@ -511,11 +518,5 @@ case "${args[@]}" in
     install_node_reload
     install_cpd_env
     install_daffy
-  ;;
-esac
-
-case "${args[@]}" in 
-  *"-h"*|*"--help"*)
-    Help
   ;;
 esac
