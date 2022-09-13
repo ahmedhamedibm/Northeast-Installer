@@ -342,7 +342,8 @@ install_cpd_env(){
     install_ibmc
     install_oc
     install_podman
-    curl -sSL https://raw.github.ibm.com/National-Northeast-1/Cp4d-Cpdcli-Install/master/cpd_install_helper.sh?token=AACTOHP4M77RCCWJK6UTH7TDES5IW | bash || sudo curl -sSL https://raw.github.ibm.com/National-Northeast-1/Cp4d-Cpdcli-Install/master/cpd_install_helper.sh?token=AACTOHP4M77RCCWJK6UTH7TDES5IW | bash
+    install_cpd_cli
+    curl -sSL curl -sSL https://raw.github.ibm.com/National-Northeast-1/Cp4d-Cpdcli-Install/master/cpd_install_helper.sh?token=AACTOHIGDMHNY7DTU4WBUBTDFHV3K | bash
 
 }
 
