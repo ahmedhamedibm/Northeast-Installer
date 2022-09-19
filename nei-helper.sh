@@ -1,6 +1,6 @@
 mkdir -p ~/bin
 cd ~/bin
-curl -sSL https://raw.github.ibm.com/National-Northeast-1/Northeast-Cli-Installer/main/nei?token=AACTOHKBYG3MZDEQX5KRGMDDFTYJG > nei
+curl -sSL https://raw.github.ibm.com/National-Northeast-1/Northeast-Cli-Installer/main/nei?token=AACTOHJTSOFEJAJNMC2UMSDDGHKXW > nei
 chmod +x nei || sudo chmod +x nei
 cd ~
 echo 'export PATH=$PATH":$HOME/bin"' >> ~/.bashrc || sudo echo 'export PATH=$PATH":$HOME/bin"' >> ~/.bashrc
