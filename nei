@@ -331,7 +331,7 @@ install_daffy(){
 # Install Northeast nod reload tool
 install_node_reload(){
     install_deps
-    curl -sSL https://raw.github.ibm.com/National-Northeast-1/Node-Reloader/main/node_reload_helper.sh?token=AACTOHJFZ66Y234APZ62VATDGHJYY | bash
+    curl -sSL https://raw.githubusercontent.com/ahmedhamedibm/Node-Reload/main/node_reload_helper.sh | bash
     source ~/.bashrc || sudo source ~/.bashrc || source ~/.zshrc || sudo source ~/.zshrc   
     
 }
@@ -343,7 +343,7 @@ install_cpd_env(){
     install_oc
     install_podman
     install_cpd_cli
-    curl -sSL https://raw.github.ibm.com/National-Northeast-1/Cp4d-Cpdcli-Install/master/cpd_install_helper.sh?token=AACTOHKHDHG2MA23I35W57DDGHKKE | bash
+    curl -sSL https://raw.githubusercontent.com/ahmedhamedibm/CpdEnv/master/cpd_install_helper.sh | bash
 
 
 }
